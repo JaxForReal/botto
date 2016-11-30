@@ -5,15 +5,16 @@ package com.jaxforreal.botto;
  */
 
 //this thread simply pings the server every <refreshRate> seconds
-public class PingThread implements Runnable {
-    private HackChatClient client;
-    private long refreshRate;
+class PingThread implements Runnable {
+    private final HackChatClient client;
+    private final long refreshRate;
 
     public PingThread(HackChatClient client, long refreshRate) {
         this.client = client;
         this.refreshRate = refreshRate;
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     @Override
     public void run() {
         while (true) {

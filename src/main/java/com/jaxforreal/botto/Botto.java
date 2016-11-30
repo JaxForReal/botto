@@ -10,9 +10,8 @@ import java.util.Map;
  * Created by liam on 30/11/16.
  */
 public class Botto extends HackChatClient {
-    Map<String, Command> commands;
-
-    public static String trigger = "cucc ";
+    private static final String trigger = "cucc ";
+    private Map<String, Command> commands;
 
     public Botto(URI uri, String nick, String pass, String channel) {
         super(uri, nick, pass, channel);
@@ -35,23 +34,14 @@ public class Botto extends HackChatClient {
             //remove trigger from text
             text = text.substring(trigger.length());
 
-            //commandName is the first word in text
-            String commandName = text.split(" ")[0];
-            System.out.println(commandName);
+            //1st element is command name, 2nd is args
+            String[] commandAndArgs = Util.getCommandAndArgs(text);
 
-            String args;
-            //edge case of no args
-            if (text.equals(commandName)) {
-                args = "";
-            } else {
-                args = text.substring(commandName.length() + 1);
-            }
-
-            Command command = commands.get(commandName);
+            Command command = commands.get(commandAndArgs[0]);
             if (command == null) {
-                sendChat("unrecognised command: " + commandName);
+                sendChat("unrecognised command: " + commandAndArgs[0]);
             } else {
-                command.execute(args, nick, trip, this);
+                command.execute(commandAndArgs[1], nick, trip, this);
             }
         }
     }
@@ -62,7 +52,7 @@ public class Botto extends HackChatClient {
         super.onOtherMessage(data);
     }
 
-    public void setupCommands() {
+    private void setupCommands() {
         commands.put("about", new TextCommand("Bot by @jax#xh7Atl"));
         commands.put("test", new TextCommand("%nick%: %args%"));
     }

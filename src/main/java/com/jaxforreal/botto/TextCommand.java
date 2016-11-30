@@ -5,10 +5,10 @@ package com.jaxforreal.botto;
  */
 
 //Text commands always send a string to chat
-//%nick% is replaced with the command executer's nickname
+//%nick% is replaced with the command executor's nickname
 //%args% is replaced with the args passed to the command
 public class TextCommand implements Command {
-    public String text;
+    private final String text;
 
     public TextCommand(String text) {
         this.text = text;

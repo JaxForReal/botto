@@ -14,11 +14,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class HackChatClient extends WebSocketClient {
-    private String nick, pass, channel;
-    private Thread pingThread;
+    private final String nick;
+    private final String pass;
+    private final String channel;
+    private final Thread pingThread;
 
     //used to deserialize json
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
 
     public HackChatClient(URI uri, String nick, String pass, String channel) {
         super(uri);
@@ -61,7 +63,7 @@ public abstract class HackChatClient extends WebSocketClient {
 
     @Override
     public void onClose(int i, String s, boolean b) {
-
+        pingThread.interrupt();
     }
 
     @Override
