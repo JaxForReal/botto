@@ -3,13 +3,13 @@ package com.jaxforreal.botto;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BottoCommands {
+class BottoCommands {
     static Map<String, Command> getCommands() {
         Map<String, Command> commands = new HashMap<>();
 
         commands.put("about", new TextCommand("Bot by @jax#xh7Atl"));
         commands.put("test", new TextCommand("%nick%: %args%"));
-        commands.put("source", new TextCommand("github.com/JaxForReal/botto"));
+        commands.put("source", new TextCommand("http://github.com/JaxForReal/botto"));
 
         //todo fix on backslash
         commands.put("unrender", new Command() {
@@ -22,7 +22,7 @@ public class BottoCommands {
 
             @Override
             public void execute(String text, String nick, String trip, Botto bot) {
-                int numToSkip = 0;
+                int numToSkip;
                 try {
                     numToSkip = text.equals("") ? 0 : Integer.parseInt(text);
                 } catch (NumberFormatException e) {
@@ -48,7 +48,7 @@ public class BottoCommands {
             }
         });
 
-        commands.put("botsay", new Command() {
+        commands.put("say", new Command() {
             @Override
             public String getHelp() {
                 return "talk through the bot";
@@ -86,8 +86,12 @@ public class BottoCommands {
 
                     bot.sendChat(message);
                 } else {
-                    //else return the helptext of command specified by text
-                    bot.sendChat(commands.get(text).getHelp());
+                    Command helpCommand = commands.get(text);
+                    if(helpCommand != null) {
+                        bot.sendChat(commands.get(text).getHelp());
+                    } else {
+                        bot.sendChat("Command not found");
+                    }
                 }
             }
         };

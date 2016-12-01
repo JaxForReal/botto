@@ -7,8 +7,8 @@ import java.time.Instant;
 
 //repeatedly waits for input and sends it to the bot as a command
 class ConsoleInputThread implements Runnable {
-    private Botto bot;
-    private BufferedReader reader;
+    private final Botto bot;
+    private final BufferedReader reader;
 
     ConsoleInputThread(Botto bot) {
         this.bot = bot;

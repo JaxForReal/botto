@@ -14,7 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class HackChatClient extends WebSocketClient {
+abstract class HackChatClient extends WebSocketClient {
     private final String nick;
     private final String pass;
     private final String channel;
@@ -23,7 +23,7 @@ public abstract class HackChatClient extends WebSocketClient {
     //used to deserialize json
     private final ObjectMapper mapper;
 
-    public HackChatClient(URI uri, String nick, String pass, String channel) {
+    HackChatClient(URI uri, String nick, String pass, String channel) {
         super(uri);
         this.nick = nick;
         this.pass = pass;
@@ -84,7 +84,7 @@ public abstract class HackChatClient extends WebSocketClient {
     }
 
     //sends the message to chat
-    public void sendChat(String message) {
+    void sendChat(String message) {
         try {
             String json = mapper.writeValueAsString(new ChatOutputData(message));
             super.send(json);
@@ -103,10 +103,10 @@ public abstract class HackChatClient extends WebSocketClient {
     }
 
     //fired when someone speaks in chat
-    public abstract void onChat(String text, String nick, String trip, long time);
+    protected abstract void onChat(String text, String nick, String trip, long time);
 
     //this is fired when a message is received where the command is not "chat"
     //examples {cmd: onlineAdd ...} or {cmd: info ...}
-    public void onOtherMessage(Map<String, Object> data) {
+    void onOtherMessage(Map<String, Object> data) {
     }
 }

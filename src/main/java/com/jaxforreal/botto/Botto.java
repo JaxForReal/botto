@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 class Botto extends HackChatClient {
-    static final String trigger = ":";
-    Map<String, Command> commands;
-    private Map<String, PrivilegeLevel> privileges;
+    static final String trigger = ";";
+    final Map<String, Command> commands;
+    private final Map<String, PrivilegeLevel> privileges;
 
-    protected List<HistoryEntry> history;
+    final List<HistoryEntry> history;
 
-    private Thread consoleInputThread;
+    private final Thread consoleInputThread;
 
     Botto(URI uri, String nick, String pass, String channel) {
         super(uri, nick, pass, channel);
@@ -71,21 +71,26 @@ class Botto extends HackChatClient {
     }
 
     void doCommand(String text, String nick, String trip, long time, PrivilegeLevel priv) {
-        if (text.startsWith(trigger)) {
-            //remove trigger from text
-            text = text.substring(trigger.length());
+        try {
+            if (text.startsWith(trigger)) {
+                //remove trigger from text
+                text = text.substring(trigger.length());
 
-            //1st element is command name, 2nd is args
-            String[] commandAndArgs = Util.getCommandAndArgs(text);
+                //1st element is command name, 2nd is args
+                String[] commandAndArgs = Util.getCommandAndArgs(text);
 
-            Command command = commands.get(commandAndArgs[0]);
-            if (command == null) {
-                sendChat("unrecognised command: " + commandAndArgs[0]);
-            } else if(!priv.outranksOrEqual(command.getPrivilegeLevel())) {
-                sendChat("you need " + command.getPrivilegeLevel().name() + " privilege or higher to do that.");
-            } else {
-                command.execute(commandAndArgs[1], nick, trip, this);
+                Command command = commands.get(commandAndArgs[0]);
+                if (command == null) {
+                    sendChat("unrecognised command: " + commandAndArgs[0]);
+                } else if (!priv.outranksOrEqual(command.getPrivilegeLevel())) {
+                    sendChat("you need " + command.getPrivilegeLevel().name() + " privilege or higher to do that.");
+                } else {
+                    command.execute(commandAndArgs[1], nick, trip, this);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            sendChat("rip in peace bot\n" + e.getClass().getName() + ": " + e.getMessage());
         }
     }
 }

@@ -5,7 +5,7 @@ public enum PrivilegeLevel {
     ADMIN(10),
     CONSOLE(20);
 
-    private int level;
+    private final int level;
     PrivilegeLevel(int level) {
         this.level = level;
     }
