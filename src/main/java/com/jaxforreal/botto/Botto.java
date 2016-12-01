@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Botto extends HackChatClient {
-    private static final String trigger = "cucc ";
+    private static final String trigger = ":";
     private Map<String, Command> commands;
     private List<HistoryEntry> history;
 
@@ -24,7 +24,6 @@ public class Botto extends HackChatClient {
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
         super.onOpen(serverHandshake);
-        sendChat("HI!, I'm cuccbot, here for all your cucking needs :)");
     }
 
     @Override
