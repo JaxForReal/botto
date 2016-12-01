@@ -6,6 +6,6 @@ interface Command {
     void execute(String text, String nick, String trip, HackChatClient bot);
 
     default PrivilegeLevel getPrivilegeLevel() {
-        return PrivilegeLevel.NONE;
+        return PrivilegeLevel.USER;
     }
 }
