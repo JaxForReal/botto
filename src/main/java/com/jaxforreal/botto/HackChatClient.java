@@ -1,5 +1,6 @@
 package com.jaxforreal.botto;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.java_websocket.client.DefaultSSLWebSocketClientFactory;
 import org.java_websocket.client.WebSocketClient;
@@ -84,8 +85,13 @@ public abstract class HackChatClient extends WebSocketClient {
 
     //sends the message to chat
     public void sendChat(String message) {
-        String messageJson = "{\"cmd\": \"chat\", \"text\": \"" + message + "\"}";
-        super.send(messageJson);
+        try {
+            String json = mapper.writeValueAsString(new ChatOutputData(message));
+            super.send(json);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            close();
+        }
     }
 
     //this method is needed to get keys for wss:// (websocket secure)
