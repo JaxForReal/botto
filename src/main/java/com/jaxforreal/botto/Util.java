@@ -1,9 +1,11 @@
 package com.jaxforreal.botto;
 
-/**
- * Created by liam on 1/12/16.
- */
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 class Util {
+    private final static SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mma z");
+
     //takes text and separates it into the command (first word), and args (rest)
     //command/args are separated by a space
     static String[] getCommandAndArgs(String text) {
@@ -18,5 +20,10 @@ class Util {
         }
 
         return new String[]{commandName, args};
+    }
+
+    static String dateString(long unixMillis) {
+        Date date = new Date(unixMillis);
+        return dateFormat.format(date);
     }
 }

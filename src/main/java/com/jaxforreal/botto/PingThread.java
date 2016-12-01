@@ -1,9 +1,5 @@
 package com.jaxforreal.botto;
 
-/**
- * Created by liam on 1/12/16.
- */
-
 //this thread simply pings the server every <refreshRate> seconds
 class PingThread implements Runnable {
     private final HackChatClient client;

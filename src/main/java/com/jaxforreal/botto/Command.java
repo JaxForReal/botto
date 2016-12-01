@@ -1,8 +1,5 @@
 package com.jaxforreal.botto;
 
-/**
- * Created by liam on 1/12/16.
- */
 interface Command {
     String getHelp();
 

@@ -3,19 +3,20 @@ package com.jaxforreal.botto;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-/**
- * Created by liam on 30/11/16.
- */
 public class Botto extends HackChatClient {
     private static final String trigger = "cucc ";
     private Map<String, Command> commands;
+    private List<HistoryEntry> history;
 
     public Botto(URI uri, String nick, String pass, String channel) {
         super(uri, nick, pass, channel);
 
+        history = new ArrayList<>();
         commands = new HashMap<>();
         setupCommands();
     }
@@ -29,6 +30,7 @@ public class Botto extends HackChatClient {
     @Override
     public void onChat(String text, String nick, String trip, long time) {
         System.out.println(nick + ": " + text);
+        history.add(0, new HistoryEntry(nick, trip, text, time));
 
         if (text.startsWith(trigger)) {
             //remove trigger from text
@@ -55,5 +57,26 @@ public class Botto extends HackChatClient {
     private void setupCommands() {
         commands.put("about", new TextCommand("Bot by @jax#xh7Atl"));
         commands.put("test", new TextCommand("%nick%: %args%"));
+        commands.put("source", new Command() {
+            @Override
+            public String getHelp() {
+                return "prints the source of the last LaTeX message";
+            }
+
+            @Override
+            public void execute(String text, String nick, String trip, HackChatClient bot) {
+                for (HistoryEntry entry : history) {
+                    if (entry.text.startsWith("$")) {
+                        //bot.sendChat("found");
+                        String escapedText = entry.text.replace('$', ' ');
+                        System.out.println(escapedText);
+                        bot.sendChat("Message by " + entry.nick + " at " + Util.dateString(entry.time) + " " + escapedText);
+                        //System.out.println("Message by " + entry.nick + " at " + Util.dateString(entry.time) + "\n" + entry.text);
+                        return;
+                    }
+                }
+                bot.sendChat("could not find latex message");
+            }
+        });
     }
 }
