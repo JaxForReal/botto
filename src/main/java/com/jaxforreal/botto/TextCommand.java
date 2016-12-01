@@ -16,7 +16,7 @@ public class TextCommand implements Command {
     }
 
     @Override
-    public void execute(String message, String nick, String trip, HackChatClient bot) {
+    public void execute(String message, String nick, String trip, Botto bot) {
         String messageText = text.replaceAll("%nick%", nick);
         messageText = messageText.replaceAll("%args%", message);
         bot.sendChat(messageText);
