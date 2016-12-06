@@ -34,6 +34,7 @@ class Botto extends HackChatClient {
         //todo put into config
         privileges = new HashMap<>();
         privileges.put("jax#xh7Atl", PrivilegeLevel.ADMIN);
+        privileges.put("SleepyKev#OG/z+L", PrivilegeLevel.ADMIN);
 
         commands = BottoCommands.getCommands();
     }
