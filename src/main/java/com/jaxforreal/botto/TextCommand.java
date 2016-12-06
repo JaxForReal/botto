@@ -19,7 +19,7 @@ public class TextCommand implements Command {
 
     @Override
     public void execute(String message, String nick, String trip, Botto bot) {
-        //escape backslashe
+        //escape backslash
         message = message.replace("\\", "\\\\");
         String messageText = text.replaceAll(Pattern.quote("%nick%"), nick);
         messageText = messageText.replaceAll(Pattern.quote("%args%"), message);

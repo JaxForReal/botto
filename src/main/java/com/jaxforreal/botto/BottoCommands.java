@@ -10,6 +10,7 @@ class BottoCommands {
         commands.put("about", new TextCommand("Bot by @jax#xh7Atl"));
         commands.put("test", new TextCommand("%nick%: %args%"));
         commands.put("source", new TextCommand("http://github.com/JaxForReal/botto"));
+        commands.put("uptime", new TextCommand("∞ hours, 4 minutes"));
 
         //todo fix on backslash
         commands.put("unrender", new Command() {
