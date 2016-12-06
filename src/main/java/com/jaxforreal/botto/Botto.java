@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 class Botto extends HackChatClient {
     static final String trigger = ";";
     final Map<String, Command> commands;
     private final Map<String, PrivilegeLevel> privileges;
+    Pattern latexPrefix = Pattern.compile("\\$[^$]*\\$");
 
     final List<HistoryEntry> history;
 
@@ -56,7 +58,7 @@ class Botto extends HackChatClient {
         history.add(0, new HistoryEntry(nick, trip, text, time));
 
         PrivilegeLevel priv = getPrivilege(nick, trip);
-        doCommand(text, nick, trip, time, priv);
+        doCommand(text, nick, trip, priv);
     }
 
     @Override
@@ -70,7 +72,10 @@ class Botto extends HackChatClient {
         return priv != null ? priv : PrivilegeLevel.USER;
     }
 
-    void doCommand(String text, String nick, String trip, long time, PrivilegeLevel priv) {
+    void doCommand(String text, String nick, String trip, PrivilegeLevel priv) {
+        //remove latex prefixes
+        text = latexPrefix.matcher(text).replaceFirst("");
+
         try {
             if (text.startsWith(trigger)) {
                 //remove trigger from text
@@ -89,8 +94,12 @@ class Botto extends HackChatClient {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            sendChat("rip in peace bot\n" + e.getClass().getName() + ": " + e.getMessage());
+            doError(e);
         }
+    }
+
+    void doError(Exception e) {
+        e.printStackTrace();
+        sendChat("rip in peace bot\n" + e.getClass().getName() + ": " + e.getMessage());
     }
 }

@@ -21,7 +21,7 @@ class ConsoleInputThread implements Runnable {
         while(true) {
             try {
                 String text = reader.readLine();
-                bot.doCommand(text, "console", "console", Instant.now().toEpochMilli(), PrivilegeLevel.CONSOLE);
+                bot.doCommand(text, "console", "console", PrivilegeLevel.CONSOLE);
             } catch (IOException e) {
                 e.printStackTrace();
                 bot.close();

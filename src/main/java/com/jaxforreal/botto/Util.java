@@ -1,7 +1,10 @@
 package com.jaxforreal.botto;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 class Util {
     private final static SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mma z");
@@ -25,5 +28,9 @@ class Util {
     static String dateString(long unixMillis) {
         Date date = new Date(unixMillis);
         return dateFormat.format(date);
+    }
+
+    static String getOutput(Process process) {
+        return new BufferedReader(new InputStreamReader(process.getInputStream())).lines().collect(Collectors.joining("\n"));
     }
 }

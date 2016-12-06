@@ -1,5 +1,6 @@
 package com.jaxforreal.botto;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,11 +9,9 @@ class BottoCommands {
         Map<String, Command> commands = new HashMap<>();
 
         commands.put("about", new TextCommand("Bot by @jax#xh7Atl"));
-        commands.put("test", new TextCommand("%nick%: %args%"));
         commands.put("source", new TextCommand("http://github.com/JaxForReal/botto"));
         commands.put("uptime", new TextCommand("∞ hours, 4 minutes"));
-
-        //todo fix on backslash
+        commands.put("format", new FormatCommand());
         commands.put("unrender", new Command() {
             @Override
             public String getHelp() {
@@ -48,7 +47,6 @@ class BottoCommands {
                 bot.sendChat("could not find any latex messages");
             }
         });
-
         commands.put("say", new Command() {
             @Override
             public String getHelp() {
@@ -62,7 +60,7 @@ class BottoCommands {
 
             @Override
             public PrivilegeLevel getPrivilegeLevel() {
-                return PrivilegeLevel.CONSOLE;
+                return PrivilegeLevel.ADMIN;
             }
         });
 
@@ -98,6 +96,50 @@ class BottoCommands {
         };
         commands.put("help", help);
         commands.put("h", help);
+        commands.put("alias", new Command() {
+            @Override
+            public PrivilegeLevel getPrivilegeLevel() {
+                return PrivilegeLevel.ADMIN;
+            }
+
+            @Override
+            public String getHelp() {
+                return "admin only boi, don't test me";
+            }
+
+            @Override
+            public void execute(String text, String nick, String trip, Botto bot) {
+                String[] cmdArgs = Util.getCommandAndArgs(text);
+
+                bot.commands.put(cmdArgs[0], new Command() {
+                    @Override
+                    public String getHelp() {
+                        return "Command aliased by " + nick;
+                    }
+
+                    @Override
+                    public void execute(String text, String nick, String trip, Botto bot) {
+                        bot.doCommand(cmdArgs[1], nick, trip, PrivilegeLevel.USER);
+                    }
+                });
+            }
+        });
+
+        commands.put("cowsay", new Command() {
+            @Override
+            public String getHelp() {
+                return "linux cowsay command";
+            }
+
+            @Override
+            public void execute(String text, String nick, String trip, Botto bot) {
+                try {
+                    bot.sendChat(Util.getOutput(new ProcessBuilder(new String[] {"cowsay", text}).start()));
+                } catch (IOException e) {
+                     bot.doError(e);
+                }
+            }
+        });
 
         return commands;
     }
