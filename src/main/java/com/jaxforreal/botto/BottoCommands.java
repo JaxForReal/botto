@@ -2,7 +2,10 @@ package com.jaxforreal.botto;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 class BottoCommands {
     static Map<String, Command> getCommands() {
@@ -33,8 +36,8 @@ class BottoCommands {
                 for (HistoryEntry entry : bot.history) {
                     if (entry.text.contains("$")) {
                         //continue to fetch next if a skip is needed
-                        if(numToSkip > 0) {
-                            numToSkip --;
+                        if (numToSkip > 0) {
+                            numToSkip--;
                             continue;
                         }
                         //bot.sendChat("found");
@@ -86,7 +89,7 @@ class BottoCommands {
                     bot.sendChat(message);
                 } else {
                     Command helpCommand = commands.get(text);
-                    if(helpCommand != null) {
+                    if (helpCommand != null) {
                         bot.sendChat(commands.get(text).getHelp());
                     } else {
                         bot.sendChat("Command not found");
@@ -134,9 +137,9 @@ class BottoCommands {
             @Override
             public void execute(String text, String nick, String trip, Botto bot) {
                 try {
-                    bot.sendChat(Util.getOutput(new ProcessBuilder(new String[] {"cowsay", text}).start()));
+                    bot.sendChat(Util.getOutput(new ProcessBuilder(new String[]{"cowsay", text}).start()));
                 } catch (IOException e) {
-                     bot.doError(e);
+                    bot.doError(e);
                 }
             }
         });
@@ -156,6 +159,48 @@ class BottoCommands {
             public void execute(String text, String nick, String trip, Botto bot) {
                 bot.loadHistoryAdd();
                 bot.saveHistoryOverwrite();
+            }
+        });
+
+        commands.put("loadhistory", new Command() {
+            @Override
+            public String getHelp() {
+                return "load logs";
+            }
+
+            @Override
+            public void execute(String text, String nick, String trip, Botto bot) {
+                bot.loadHistoryAdd();
+            }
+        });
+
+        Random r = new Random();
+        commands.put("quote", new Command() {
+            @Override
+            public String getHelp() {
+                return "Usage: quote <user>\n" +
+                        "returns a random quote from <user>\n" +
+                        "or random quote from anyone is no user specified";
+            }
+
+            @Override
+            public void execute(String text, String nick, String trip, Botto bot) {
+                if (text.equals("")) {
+                    //get random if no nick supplied
+                    HistoryEntry entry = bot.history.get(r.nextInt(bot.history.size()));
+                    bot.sendChat(entry.nick + " at " + Util.dateString(entry.time) + "\n" + entry.text);
+                } else {
+                    //filter based on nick
+                    List<HistoryEntry> relevantEntries = bot.history.stream()
+                            .filter(e -> e.nick.toLowerCase().equals(text.toLowerCase()))
+                            .collect(Collectors.toList());
+                    if (relevantEntries.size() > 0) {
+                        HistoryEntry entry = relevantEntries.get(r.nextInt(relevantEntries.size()));
+                        bot.sendChat(entry.nick + " at " + Util.dateString(entry.time) + "\n" + entry.text);
+                    } else {
+                        bot.sendChat("no relevant entries found");
+                    }
+                }
             }
         });
         return commands;

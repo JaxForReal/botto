@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 class Botto extends HackChatClient {
-    static final String trigger = ">";
+    static final String trigger = ";";
     final Map<String, Command> commands;
     private final Map<String, PrivilegeLevel> privileges;
     Pattern latexPrefix = Pattern.compile("\\$[^$]*\\$");
@@ -92,7 +92,7 @@ class Botto extends HackChatClient {
 
                 Command command = commands.get(commandAndArgs[0]);
                 if (command == null) {
-                    sendChat("unrecognised command: " + commandAndArgs[0]);
+                    //sendChat("unrecognised command: " + commandAndArgs[0]);
                 } else if (!priv.outranksOrEqual(command.getPrivilegeLevel())) {
                     sendChat("you need " + command.getPrivilegeLevel().name() + " privilege or higher to do that.");
                 } else {
