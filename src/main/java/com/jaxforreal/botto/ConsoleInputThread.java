@@ -3,7 +3,6 @@ package com.jaxforreal.botto;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.time.Instant;
 
 //repeatedly waits for input and sends it to the bot as a command
 class ConsoleInputThread implements Runnable {

@@ -119,7 +119,7 @@ class BottoCommands {
 
                     @Override
                     public void execute(String text, String nick, String trip, Botto bot) {
-                        bot.doCommand(cmdArgs[1], nick, trip, PrivilegeLevel.USER);
+                        bot.doCommand(cmdArgs[1], "console", "console", PrivilegeLevel.USER);
                     }
                 });
             }
@@ -141,6 +141,23 @@ class BottoCommands {
             }
         });
 
+        commands.put("savehistory", new Command() {
+            @Override
+            public String getHelp() {
+                return "save logs";
+            }
+
+            @Override
+            public PrivilegeLevel getPrivilegeLevel() {
+                return PrivilegeLevel.ADMIN;
+            }
+
+            @Override
+            public void execute(String text, String nick, String trip, Botto bot) {
+                bot.loadHistoryAdd();
+                bot.saveHistoryOverwrite();
+            }
+        });
         return commands;
     }
 }

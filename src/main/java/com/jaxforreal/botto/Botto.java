@@ -1,7 +1,10 @@
 package com.jaxforreal.botto;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.java_websocket.handshake.ServerHandshake;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,12 +13,14 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 class Botto extends HackChatClient {
-    static final String trigger = ";";
+    static final String trigger = ">";
     final Map<String, Command> commands;
     private final Map<String, PrivilegeLevel> privileges;
     Pattern latexPrefix = Pattern.compile("\\$[^$]*\\$");
 
     final List<HistoryEntry> history;
+    ObjectMapper historyMapper;
+    File historyFile = new File("/home/liam/Documents/hist.json");
 
     private final Thread consoleInputThread;
 
@@ -23,6 +28,7 @@ class Botto extends HackChatClient {
         super(uri, nick, pass, channel);
 
         history = new ArrayList<>();
+        historyMapper = new ObjectMapper();
         consoleInputThread = new Thread(new ConsoleInputThread(this));
 
         //todo put into config
@@ -101,5 +107,28 @@ class Botto extends HackChatClient {
     void doError(Exception e) {
         e.printStackTrace();
         sendChat("rip in peace bot\n" + e.getClass().getName() + ": " + e.getMessage());
+    }
+
+    //writes history to file
+    void saveHistoryOverwrite() {
+        System.out.println("saving hist");
+        try {
+            historyMapper.writeValue(historyFile, history);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //loads history from history file, adds to current running history
+    void loadHistoryAdd() {
+        System.out.println("loading hist");
+        List<HistoryEntry> fileEntries = new ArrayList<>();
+        try {
+            fileEntries = historyMapper.readValue(historyFile, history.getClass());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        history.addAll(fileEntries);
     }
 }

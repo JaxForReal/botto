@@ -1,10 +1,10 @@
 package com.jaxforreal.botto;
 
 class HistoryEntry {
-    final String nick;
-    final String trip;
-    final String text;
-    final long time;
+    public final String nick;
+    public final String trip;
+    public final String text;
+    public final long time;
 
     public HistoryEntry(String nick, String trip, String text, long time) {
         this.nick = nick;
